@@ -1,13 +1,14 @@
 draw();
 
 $("#stock-input").on('submit',function(e){
+  e.preventDefault();
   var val = $('#stock-name').val();
   plot(val);
 })
 
 function plot(company)
-{
-  var query = "http://localhost:5000/data/"+company;
+{ 
+  var query = $(location).attr('href') + "data/" +company;
   $.getJSON(query, function(data) 
   {
     console.log(data);
