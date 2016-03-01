@@ -18,30 +18,41 @@ var search = { source:'WIKI', table: ''};
 exports.readOne = function (req, res) {
   search.table = req.params.id;
   quandl.dataset(search, options, function(err, response){
-      if(err)
-        throw err;
-      
-      if(JSON.parse(response).dataset.data)
-      {
-        var dat = JSON.parse(response).dataset;
-        
-        var date=[], vals=[];
-        dat.data.forEach(function(val, index){
-          date.push(val[0]);
-          vals.push(val[1]);
-          
-          if(index + 1 === dat.data.length)
-          {
-            var obj = {};
-            obj._id = dat.id;
-            obj.name = dat.dataset_code;
-            obj.dates = date;
-            obj.values = vals;
-            //obj.backup = dat;
+    if(err)
+      console.err(err);
 
-            res.json(obj);
-          }
-        });
-      }
+    response = JSON.parse(response);
+
+    if(response['dataset'] !== undefined)
+    {
+      var dat = response.dataset;
+      
+      var date=[], vals=[];
+      dat.data.forEach(function(val, index){
+        date.push(val[0]);
+        vals.push(val[1]);
+        
+        if(index + 1 === dat.data.length)
+        {
+          var obj = {};
+          obj._id = dat.id;
+          obj.name = dat.dataset_code;
+          obj.dates = date;
+          obj.values = vals;
+          //obj.backup = dat;
+
+          res.json(obj);
+        }
+      });
+    }
+    else
+    { 
+      var obj = {}
+      if(response['quandl_error'] !== undefined)
+        obj.err = response['quandl_error'];
+      else
+        obj.err = response;
+      res.json(obj);
+    }
   });
 };
