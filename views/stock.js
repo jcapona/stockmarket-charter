@@ -8,7 +8,7 @@ $("#stock-input").on('submit',function(e){
 
 function plot(company)
 {
-  var query = "http://localhost:5000/data/" + company + "/";
+  var query = "https://stockmarket-charter.herokuapp.com/" + company + "/";
   $.getJSON(query, function(data) 
   {
     console.log(data);
