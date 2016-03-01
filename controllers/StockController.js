@@ -1,17 +1,25 @@
-var Stock = require('../models/Stock.js');
+var Quandl = require("quandl");
+var quandl = new Quandl({
+  auth_token: process.env.QUANDL_KEY
+});
 
-  // Finds a Stock in the db
-  exports.readOne = function (req, res) {
-    var url = "https://www.quandl.com/api/v3/datasets/WIKI/"+req.params.id+".json?";
-    var start_date = "start_date=1985-05-01";
-    var end_date = "end_date=1997-07-01";
-    var order = "order=asc";
-    var column_index = "column_index=4";
-    var collapse= "collapse=quarterly";
-    var transf = "transformation=rdiff";
+// Parameter to request data to Quandl API
+var options = {
+  format: 'json',
+  start_date: "2016-01-01",
+  end_date: "2016-02-29",
+  column_index: 4,
+  order: "asc"
+};
+var search = { source:'WIKI', table: ''};
 
-    var query = url+"&"+start_date+"&"+end_date+"&"+order+"&"+column_index+"&"+collapse+"&"+transf;
-
-  };
-
+// Finds a Stock in the db
+exports.readOne = function (req, res) {
+  search.table = req.params.id;
+  quandl.dataset(search, options, function(err, response){
+      if(err)
+          throw err;
+   
+      res.json(JSON.parse(response));// Must use JSON.parse! 
+  });
 };
