@@ -1,12 +1,3 @@
-draw(); // Initialize drawing
-
-$("#stock-input").on('submit',function(e){
-  e.preventDefault();
-  var val = $('#stock-name').val();
-  connection.send(val);
-  getData(val);
-})
-
 // Websocket connection
 
 window.WebSocket = window.WebSocket || window.MozWebSocket; // use mozilla built in websocket if possible
@@ -17,6 +8,11 @@ connection.onopen = function () {
 };
 
 connection.onerror = function (error) {
+  console.log(error);
+};
+
+connection.onclose = function (error) {
+  console.log(error);
 };
 
 connection.onmessage = function (message) {
@@ -33,6 +29,17 @@ connection.onmessage = function (message) {
   })
 
 };
+
+
+
+draw(); // Initialize drawing
+
+$("#stock-input").on('submit',function(e){
+  e.preventDefault();
+  var val = $('#stock-name').val();
+  connection.send(val);
+  getData(val);
+})
 
 // Plotting functions 
 
