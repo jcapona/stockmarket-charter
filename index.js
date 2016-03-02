@@ -1,29 +1,25 @@
-var express = require('express');
+var express = require('express');  
+var app = express();  
+var server = require('http').Server(app);  
+var io = require('socket.io')(server);
 var bodyParser = require('body-parser');
-var app = express();
-var expressWs = require('express-ws')(app);
 var mongoose = require("mongoose");
 
 require('dotenv').config();
 mongoose.connect(process.env.MONGO_URI);
 
 app.use(express.static(__dirname + '/views'));
-app.use(express.static(__dirname + 'views'));
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get('/', function (req, res) {
+
+app.get('/', function(req, res) {  
   res.sendFile(__dirname+'/views/index.html');
 });
 
-// CRUD operations
 var StockController = require('./controllers/StockController');
-app.get('/data/:id',StockController.readOne); // Read One
-expressWs.getWss().on('connection', StockController.getData);
+io.on('connection', StockController.getData);
 
-app.get('/*', function (req, res) {
-  res.redirect('/');
+server.listen(8080, function() {  
+  console.log("Servidor corriendo en http://localhost:8080");
 });
-
-app.listen(process.env.PORT || 5000);
