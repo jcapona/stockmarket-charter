@@ -3,11 +3,14 @@ var plottingData = [];
 var socket = io.connect($(location).attr('href'), { 'forceNew': true });
 
 socket.on('err', function(data) {  
-  $("#err").html("<p>"+data.err.message+"</p>");
+  $("#err").html("<div class='alert alert-danger alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.err.message+"</strong></div>");
+  $("#stock-name").addClass("has-error");
 });
 
-socket.on('data', function(data) {  
+socket.on('data', function(data) { 
+  console.log(data); 
   $("#err").html('');
+  $("#stock-name").removeClass("has-error");
   // TODO: Implement compare function to avoid replot
   if(data != plottingData)
   {
@@ -19,7 +22,10 @@ socket.on('data', function(data) {
 
         $("#stocks-span").html('');
         plottingData.forEach(function(val,index){
-          var btnCode = "<button class='btn btn-default stocks-btn' type='button' value="+val._id+">"+val.name+" <span>&times;</span></button>";
+          var btnCode = "<div class='col-xs-6 col-sm-4 col-md-3'><div class='stock-cont'><h2>"+val.name;
+           btnCode += "<button class='btn btn-default stocks-btn close' type='button' value="+val._id+"><span>&times;</span></button></h2>";
+           btnCode += "</div></div>";
+
           $("#stocks-span").append(btnCode);
         });
 
@@ -87,16 +93,56 @@ function deleteSinglePlot(index, callback)
 function draw(){
   var layout = {
     title: '',
+    showlegend: false,
+    paper_bgcolor: "rgb(42,42,42)",
+    plot_bgcolor: "rgb(42,42,42)",
+    margin: {
+      b: 40,
+      l: 70,
+      r: 50,
+      t: 20
+    },
     xaxis: {
-      title: 'Date',
+      //title: 'Date',
       showgrid: false,
-      zeroline: false
+      zeroline: false,
+      gridcolor: "#eee",
+      titlefont: {
+        family:  'Oswald, sans-serif',
+        size: 12,
+        color: '#eee'
+      },
+      tickfont:{
+        color: "#eee",
+      }
     },
     yaxis: {
-      title: 'Close USD',
-      showline: false
+      title: 'Closing Price - USD',
+      showline: false,
+      zeroline: false,
+      gridcolor: "#444",
+      titlefont: {
+        family:  'Oswald, sans-serif',
+        size: 15,
+        color: '#eee'
+      },
+      tickfont:{
+        color: "#eee",
+      }
+    },
+    legend: {
+      font: {
+        family:  'Oswald, sans-serif',
+        size: 15,
+        color: '#eee'
+      },
     }
   };
 
   Plotly.newPlot('stockChart', [], layout);
 }
+
+
+window.onresize = function() {
+  Plotly.Plots.resize('stockChart');
+};
