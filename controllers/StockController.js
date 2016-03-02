@@ -27,22 +27,34 @@ exports.readOne = function (req, res) {
     {
       var dat = response.dataset;
       
-      var date=[], vals=[];
-      dat.data.forEach(function(val, index){
-        date.push(val[0]);
-        vals.push(val[1]);
-        
-        if(index + 1 === dat.data.length)
-        {
-          var obj = {};
-          obj._id = dat.id;
-          obj.name = dat.dataset_code;
-          obj.dates = date;
-          obj.values = vals;
-          //obj.backup = dat;
+      Stock.StockModel.findOne({_id: dat.id}, function(err, stock) {
+        if(err)
+          return res.status(500).send(err.message);
+        if(stock)
+          return res.json(stock);
 
-          res.json(obj);
-        }
+        var date=[], vals=[];
+        dat.data.forEach(function(val, index){
+          date.push(val[0]);
+          vals.push(val[1]);
+          
+          if(index + 1 === dat.data.length)
+          {
+            var stock = new Stock.StockModel({
+              _id: dat.id,
+              name: dat.dataset_code,
+              dates: date,
+              values: vals
+            }).save(function(err,stock) {
+              if(err) 
+                return res.status(500).send(err.message);        
+              res.json(stock);
+              /*
+              TODO: Call function to send DB elements to each user
+              */
+            })
+          }
+        });
       });
     }
     else
@@ -56,3 +68,13 @@ exports.readOne = function (req, res) {
     }
   });
 };
+
+exports.getData = function (ws, req) {
+  Stock.StockModel.find({}, function(err, stocks){
+    ws.send(JSON.stringify({stocks: stocks}), function (error){
+      if(error)
+        console.error(error);
+    });
+  })
+  
+}
