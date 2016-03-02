@@ -26,8 +26,6 @@ exports.getData = function (socket) {
 
   // Receives a query for displaying a new stock
   socket.on('stock', function(data) {
-    console.log("Received a stock!");
-
     search.table = data;
     quandl.dataset(search, options, function(err, response){
       if(err)
@@ -43,8 +41,6 @@ exports.getData = function (socket) {
           Stock.StockModel.findOne({_id: dat.id}, function(err, stock) {
             if(err)
               console.error(err);
-            else if(stock)
-              console.log("Already exists in db :)");
             else
             {
               var date=[], vals=[];
@@ -64,7 +60,6 @@ exports.getData = function (socket) {
                       console.error(err);
                     else
                     {
-                      console.log("New stock saved!");
                       Stock.StockModel.find({}, function(err, stocks){
                         if(err)
                           console.error(err);
@@ -89,8 +84,26 @@ exports.getData = function (socket) {
         }
       }
     });
-
-
   });
+
+  socket.on('stock-delete', function(data) {
+    Stock.StockModel.findOne({_id: data}, function(err, stock) {
+      if(err)
+        console.error(err);
+      else
+      {
+        stock.remove(function(err){
+          Stock.StockModel.find({}, function(err, stocks){
+            if(err)
+              console.error(err);
+            else  
+              socket.emit('data', stocks);
+          });
+        });
+      }
+    });
+  });
+
+  
 
 };

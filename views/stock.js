@@ -19,7 +19,7 @@ socket.on('data', function(data) {
 
         $("#stocks-span").html('');
         plottingData.forEach(function(val,index){
-          var btnCode = "<a class='btn btn-default stocks-btn'>"+val.name+" <span>&times;</span></a>";
+          var btnCode = "<button class='btn btn-default stocks-btn' type='button' value="+val._id+">"+val.name+" <span>&times;</span></button>";
           $("#stocks-span").append(btnCode);
         });
 
@@ -28,6 +28,14 @@ socket.on('data', function(data) {
   }
   
 })
+
+/**
+  Deletes an stock from graph
+*/
+$('#stocks').on('click', '.stocks-btn', function (e) {  
+  e.preventDefault();
+  socket.emit('stock-delete', this.value);
+});
 
 draw(); // Initialize drawing
 
