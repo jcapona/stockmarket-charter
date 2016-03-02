@@ -1,3 +1,4 @@
+var plottingData = [];
 
 var socket = io.connect($(location).attr('href'), { 'forceNew': true });
 
@@ -6,11 +7,18 @@ socket.on('err', function(data) {
 });
 
 socket.on('data', function(data) {  
-  console.log(data);
   $("#err").html('');
-  data.forEach(function(val,index){
-    plot(val);
-  })
+
+  if(data !== plottingData)
+  {
+    deletePlot(plottingData, function(){
+      plottingData = data;
+      plot(plottingData, function(){
+ 
+      });
+    });
+  }
+  
 })
 
 draw(); // Initialize drawing
@@ -21,17 +29,43 @@ $("#stock-input").on('submit',function(e){
   socket.emit('stock', val);
 })
 
-function plot(data)
+function plot(data, callback)
 {
-  var plotData = [
-    {
-      x: data.dates,
-      y: data.values,
-      name: data.name,
-      type: 'scatter'
-    }
-  ];
-  Plotly.addTraces('stockChart', plotData);
+  if(data.length == 0)
+    return callback();
+ 
+  data.forEach(function(val,index){
+    var plotData = [
+      {
+        x: val.dates,
+        y: val.values,
+        name: val.name,
+        type: 'scatter'
+      }
+    ];
+
+    Plotly.addTraces('stockChart', plotData);
+    if(index+1 == data.length)
+      return callback();
+  });
+}
+
+function deletePlot(data, callback)
+{
+  if(data.length == 0)
+    return callback();
+
+  data.forEach(function (val, index){
+    Plotly.deleteTraces('stockChart', 0);
+    if(index + 1 == data.length)
+      return callback();
+  })
+}
+
+function deleteSinglePlot(index, callback)
+{
+  Plotly.deleteTraces('stockChart', index);
+  return callback();
 }
 
 function draw(){
