@@ -24,21 +24,33 @@
         
         <div id="stockChart" style="width: 100%; height: 400px;"></div>
 
-        <form id="stock-input" class="row">
-          <div class="col-xs-12 col-md-3"></div>
-          <div class="input-group col-xs-12 col-md-6">
-            <input class="form-control input-sm" id="stock-name" placeholder="Stock Name">
-            <span class="input-group-btn">
-              <button type="submit" class="btn btn-default btn-sm">Submit</button>
-            </span>
-          </div>
-          <div class="col-xs-12 col-md-3"></div>
-        </form>
-
         <div class="row">
-          <div class="col-xs-12 col-md-3"></div>
+
+          <form id="stock-input" class="col-xs-12 col-md-6">
+            <div class="input-group">
+              <input class="form-control" id="stock-name" placeholder="Stock Name">
+              <span class="input-group-btn">
+                <button type="submit" class="btn btn-default">Submit</button>
+              </span>
+            </div>
+          </form>
+          
+          <div class="col-xs-12 col-md-6">
+            <select id="range" class="form-control">
+              <option value="58060800000">2 years</option>
+              <option value="29030400000">1 year</option>
+              <option value="14515200000">6 months</option>
+              <option value="2419200000">1 month</option>
+              <option value="1209600000">2 weeks</option>
+              <option value="604800000">1 week</option>
+            </select>
+          </div>
+
+        </div>
+        <div class="row">
+          
           <div class="col-xs-12 col-md-6"><div id="err"></div></div>
-          <div class="col-xs-12 col-md-3"></div>
+          
         </div>
 
         <div id="stocks">

@@ -8,7 +8,6 @@ socket.on('err', function(data) {
 });
 
 socket.on('data', function(data) { 
-  console.log(data); 
   $("#err").html('');
   $("#stock-name").removeClass("has-error");
   // TODO: Implement compare function to avoid replot
@@ -44,6 +43,60 @@ $('#stocks').on('click', '.stocks-btn', function (e) {
 });
 
 draw(); // Initialize drawing
+
+$("#range").on('change', function(){
+  var layout = {
+    title: '',
+    showlegend: false,
+    paper_bgcolor: "rgb(42,42,42)",
+    plot_bgcolor: "rgb(42,42,42)",
+    margin: {
+      b: 40,
+      l: 70,
+      r: 50,
+      t: 20
+    },
+    xaxis: {
+      showgrid: false,
+      zeroline: false,
+      gridcolor: "#eee",
+      type: "date",
+      tickformat: "%x",
+      range: [(new Date).getTime()-Number($("#range").val()), (new Date).getTime()],
+      titlefont: {
+        family:  'Oswald, sans-serif',
+        size: 12,
+        color: '#eee'
+      },
+      tickfont:{
+        color: "#eee",
+      }
+    },
+    yaxis: {
+      title: 'Closing Price - USD',
+      showline: false,
+      zeroline: false,
+      gridcolor: "#444",
+      titlefont: {
+        family:  'Oswald, sans-serif',
+        size: 15,
+        color: '#eee'
+      },
+      tickfont:{
+        color: "#eee",
+      }
+    },
+    legend: {
+      font: {
+        family:  'Oswald, sans-serif',
+        size: 15,
+        color: '#eee'
+      },
+    }
+  };
+
+  Plotly.relayout('stockChart', layout)
+});
 
 $("#stock-input").on('submit',function(e){
   e.preventDefault();
@@ -103,10 +156,12 @@ function draw(){
       t: 20
     },
     xaxis: {
-      //title: 'Date',
       showgrid: false,
       zeroline: false,
       gridcolor: "#eee",
+      type: "date",
+      tickformat: "%x",
+      range: [1456876800000-Number($("#range").val()), 1456876800000],
       titlefont: {
         family:  'Oswald, sans-serif',
         size: 12,
