@@ -1,9 +1,12 @@
 var mongoose = require('mongoose');
 
 var StockSchema = new mongoose.Schema({
+  _id: String,
   name: String,
-  date: String,
-  value: String
+  dates: [String],
+  values: [String]
 });
 
-module.exports = {Stock: StockSchema};
+var Stock = mongoose.model("stocks", StockSchema);
+
+module.exports = {StockModel: Stock};
