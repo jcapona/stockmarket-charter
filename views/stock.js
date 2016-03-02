@@ -8,13 +8,21 @@ socket.on('err', function(data) {
 
 socket.on('data', function(data) {  
   $("#err").html('');
-
-  if(data !== plottingData)
+  // TODO: Implement compare function to avoid replot
+  if(data != plottingData)
   {
-    deletePlot(plottingData, function(){
+    deletePlot(plottingData, function(err){
+      if(err) return;
       plottingData = data;
-      plot(plottingData, function(){
- 
+      plot(plottingData, function(err){
+        if(err) return;
+
+        $("#stocks-span").html('');
+        plottingData.forEach(function(val,index){
+          var btnCode = "<a class='btn btn-default stocks-btn'>"+val.name+" <span>&times;</span></a>";
+          $("#stocks-span").append(btnCode);
+        });
+
       });
     });
   }
@@ -32,7 +40,7 @@ $("#stock-input").on('submit',function(e){
 function plot(data, callback)
 {
   if(data.length == 0)
-    return callback();
+    return callback(false);
  
   data.forEach(function(val,index){
     var plotData = [
@@ -46,19 +54,19 @@ function plot(data, callback)
 
     Plotly.addTraces('stockChart', plotData);
     if(index+1 == data.length)
-      return callback();
+      return callback(false);
   });
 }
 
 function deletePlot(data, callback)
 {
   if(data.length == 0)
-    return callback();
+    return callback(false);
 
   data.forEach(function (val, index){
     Plotly.deleteTraces('stockChart', 0);
     if(index + 1 == data.length)
-      return callback();
+      return callback(false);
   })
 }
 
