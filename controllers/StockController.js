@@ -15,7 +15,6 @@ var options = {
 var search = { source:'WIKI', table: ''};
 
 exports.getData = function (socket) {
-  console.log('Alguien se ha conectado con Sockets');
   Stock.StockModel.find({}, function(err, stocks){
     if(err)
       console.error(err);
@@ -95,19 +94,3 @@ exports.getData = function (socket) {
   });
 
 };
-
-/*
-exports.getData = function (ws, req) {
-  Stock.StockModel.find({}, function(err, stocks){
-    if(err)
-      console.error(err);
-    else
-    {
-      ws.send(JSON.stringify({stocks: stocks}), function (error){
-        if(error)
-          console.error(error);
-      });
-    }
-  })
-}
- */
