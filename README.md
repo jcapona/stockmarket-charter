@@ -13,3 +13,5 @@ Check it out live @ [stockmarket-charter.herokuapp.com](http://stockmarket-chart
 - [Getting started with Quandl API](https://www.quandl.com/blog/getting-started-with-the-quandl-api#Multiple-Datasets)
 - [NPM Quandl package](https://www.npmjs.com/package/quandl)
 - [Example of data from Quandl database](https://www.quandl.com/data/WIKI/GOOGL-Alphabet-Inc-GOOGL-Prices-Dividends-Splits-and-Trading-Volume)
+- [Plotly Reference](https://plot.ly/javascript/reference/#layout-xaxis-tickmode)
+- [Socket.io Docs](http://socket.io/docs/)
