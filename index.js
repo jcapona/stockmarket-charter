@@ -2,6 +2,8 @@ var express = require('express');
 var app = express();  
 var server = require('http').Server(app);  
 var io = require('socket.io')(server);
+module.exports.io = io;
+
 var mongoose = require("mongoose");
 
 require('dotenv').config();

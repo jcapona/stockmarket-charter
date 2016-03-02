@@ -1,3 +1,4 @@
+var io = require('../index').io;
 var Stock = require('../models/Stock.js');
 var Quandl = require("quandl");
 var quandl = new Quandl({
@@ -64,7 +65,7 @@ exports.getData = function (socket) {
                         if(err)
                           console.error(err);
                         else  
-                          socket.emit('data', stocks);
+                          io.emit('data', stocks);
                       });
                     }
                   })
@@ -97,7 +98,7 @@ exports.getData = function (socket) {
             if(err)
               console.error(err);
             else  
-              socket.emit('data', stocks);
+              io.emit('data', stocks);
           });
         });
       }
