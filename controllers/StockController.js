@@ -8,7 +8,7 @@ var quandl = new Quandl({
 // Parameter to request data to Quandl API
 var options = {
   format: 'json',
-  //start_date: "2016-01-01",
+  start_date: "2014-01-01",
   end_date: "",
   column_index: 4,
   order: "asc"
