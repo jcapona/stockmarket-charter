@@ -8,8 +8,8 @@ var quandl = new Quandl({
 // Parameter to request data to Quandl API
 var options = {
   format: 'json',
-  start_date: "2016-01-01",
-  end_date: "2016-02-29",
+  //start_date: "2016-01-01",
+  end_date: "",
   column_index: 4,
   order: "asc"
 };
@@ -28,6 +28,9 @@ exports.getData = function (socket) {
   // Receives a query for displaying a new stock
   socket.on('stock', function(data) {
     search.table = data;
+    var today = new Date();
+    options.end_date = today.toISOString().slice(0,10);
+
     quandl.dataset(search, options, function(err, response){
       if(err)
         console.err(err);
