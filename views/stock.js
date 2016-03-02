@@ -1,17 +1,46 @@
-draw();
+draw(); // Initialize drawing
 
 $("#stock-input").on('submit',function(e){
   e.preventDefault();
   var val = $('#stock-name').val();
-  plot(val);
+  connection.send(val);
+  getData(val);
 })
 
-function plot(company)
+// Websocket connection
+
+window.WebSocket = window.WebSocket || window.MozWebSocket; // use mozilla built in websocket if possible
+
+var connection = new WebSocket('ws://'+ $(location).attr('host'));
+
+connection.onopen = function () {
+};
+
+connection.onerror = function (error) {
+};
+
+connection.onmessage = function (message) {
+  console.log(message);
+  try {
+      var msg = JSON.parse(message.data);
+  } catch (e) {
+      console.log('This doesn\'t look like a valid JSON: ', message.data);
+      return;
+  }
+  console.log(msg);
+  msg.stocks.forEach(function(val,index){
+    plot(val);
+  })
+
+};
+
+// Plotting functions 
+
+function getData(company)
 { 
   var query = $(location).attr('href') + "data/" +company;
   $.getJSON(query, function(data) 
   {
-    console.log(data);
     if(data.err !== undefined)
     {
       $("#err").html("<p>"+data.err.message+"</p>");
@@ -19,17 +48,22 @@ function plot(company)
     else
     {
       $("#err").html('');
-      var data = [
-        {
-          x: data.dates,
-          y: data.values,
-          name: data.name,
-          type: 'scatter'
-        }
-      ];
-      Plotly.addTraces('stockChart', data);
+      plot(data);
     }
   });
+}
+
+function plot(data)
+{
+  var plotData = [
+    {
+      x: data.dates,
+      y: data.values,
+      name: data.name,
+      type: 'scatter'
+    }
+  ];
+  Plotly.addTraces('stockChart', plotData);
 }
 
 function draw(){
