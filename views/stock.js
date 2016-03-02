@@ -11,7 +11,7 @@ $("#stock-input").on('submit',function(e){
 
 window.WebSocket = window.WebSocket || window.MozWebSocket; // use mozilla built in websocket if possible
 
-var connection = new WebSocket('ws://'+ $(location).attr('host'));
+var connection = new WebSocket('wss://'+ $(location).attr('host'));
 
 connection.onopen = function () {
 };
